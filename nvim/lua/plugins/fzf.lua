@@ -4,6 +4,26 @@ return {
   opts = {},
   config = function()
     local fzf = require("fzf-lua")
+    local tmux_tab = require("core.tmux-tab")
+
+    -- Custom action để mở file trong tmux tab mới
+    local function open_in_tmux_tab(selected, opts)
+      if not selected or #selected == 0 then return end
+      local path = require("fzf-lua.path")
+      for _, sel in ipairs(selected) do
+        -- Sử dụng fzf-lua's path utility để extract đường dẫn file đúng cách
+        -- (loại bỏ icon, line number, column, etc.)
+        local entry = path.entry_to_file(sel, opts)
+        local filepath = entry.path or sel
+        -- Fallback: nếu không có path, thử parse thủ công
+        if not filepath or filepath == "" then
+          -- Strip icon ở đầu (icon thường là 1-4 ký tự unicode + space)
+          local stripped = sel:gsub("^[^%w/%.~]+", "")
+          filepath = stripped:match("^([^:]+)") or stripped
+        end
+        tmux_tab.open_in_new_tmux_window(filepath)
+      end
+    end
 
     -- =========================
     -- ⚙️ SETUP
@@ -22,6 +42,15 @@ return {
       keymap = {
         fzf = {
           ["ctrl-q"] = "select-all+accept",
+        },
+      },
+      -- Thêm action ctrl-t để mở trong tmux tab mới
+      actions = {
+        files = {
+          ["default"] = fzf.actions.file_edit,
+          ["ctrl-t"] = open_in_tmux_tab,  -- Mở trong tmux tab mới
+          ["ctrl-s"] = fzf.actions.file_split,
+          ["ctrl-v"] = fzf.actions.file_vsplit,
         },
       },
     })

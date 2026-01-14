@@ -1,47 +1,70 @@
 local opt = vim.opt
 local g = vim.g
 
--- Giao diện
-opt.number = true            -- Hiển thị số dòng
-opt.relativenumber = true    -- Số dòng tương đối
-opt.cursorline = true        -- Gạch chân dòng hiện tại
-opt.termguicolors = true     -- Hỗ trợ màu GUI
+-- ==== UI ====
+opt.number = true             -- Hiển thị số dòng
+opt.relativenumber = false    -- Không dùng số dòng tương đối
+opt.cursorline = true         -- Highlight dòng con trỏ
+opt.termguicolors = true      -- Hỗ trợ màu GUI
+opt.signcolumn = "yes"        -- Luôn hiện cột dấu hiệu (LSP, Git,...)
+opt.wrap = true               -- Tự xuống dòng khi quá dài
+opt.linebreak = true          -- không ngắt từ khi xuống dòng
+opt.scrolloff = 5             -- Giữ khoảng cách khi cuộn
+vim.o.showmode = false        -- Tắt mode (INSERT / NORMAL)
+opt.inccommand = "split"      -- Live preview khi thay thế
 
--- Tìm kiếm
-opt.ignorecase = true        -- Không phân biệt hoa/thường
-opt.smartcase = true         -- Nếu có 1 chữ hoa → phân biệt
+-- ==== Tìm kiếm ====
+opt.ignorecase = true         -- Không phân biệt hoa/thường
+opt.smartcase = true          -- Nếu có 1 chữ hoa → phân biệt
 
--- Indentation
-opt.tabstop = 4              -- Số khoảng trắng cho tab
-opt.shiftwidth = 4           -- Số khoảng trắng khi >> <<
-opt.expandtab = true         -- Biến tab thành space
-opt.smartindent = true
+-- ==== Indentation ====
+opt.tabstop = 4               -- tab = 4
+opt.shiftwidth = 4            -- >> và <<
+opt.expandtab = true          -- tab → space
+opt.smartindent = true        -- indent thông minh
 
--- Giao diện hiển thị
-opt.wrap = true             -- Không tự xuống dòng
-opt.signcolumn = "yes"       -- Luôn hiện cột dấu hiệu (LSP, Git...)
-vim.opt.linebreak = true    -- không bị ngắt giữa từ khi xuống dòng
+-- ==== Tương tác ====
+opt.clipboard = "unnamedplus" -- Copy/paste hệ thống
+opt.mouse = "a"               -- Cho phép dùng chuột
 
--- Tương tác
-opt.clipboard = "unnamedplus"  -- Copy/paste với hệ thống
-opt.mouse = "a"                -- Cho phép dùng chuột
+-- ==== Undo / Backup ====
+opt.undofile = true           -- Lưu file undo
+opt.swapfile = false          -- Không dùng swap
+opt.backup = false            -- Không backup
 
--- Undo
-opt.undofile = true            -- Bật file undo
-opt.swapfile = false           -- Tắt file swap
-opt.backup = false
+-- ==== Timing ====
+opt.updatetime = 300          -- Thời gian chờ LSP/diagnostic
+opt.timeoutlen = 400          -- Timeout cho mapped sequence
 
--- Tốc độ
-opt.updatetime = 300           -- Thời gian chờ (ms)
-opt.timeoutlen = 400           -- Timeout cho mapped sequence
-
---  tắt dòng trạng thái
-vim.o.showmode = false
-
-vim.opt.number = true          -- Bật số dòng tuyệt đối
-vim.opt.relativenumber = false   -- Tắt số dòng tương đối
-
-vim.opt.inccommand = 'split'
-
-vim.opt.scrolloff = 20
-
+-- =========================
+-- 🔴 DIAGNOSTIC CONFIG (LazyVim style)
+-- =========================
+vim.diagnostic.config({
+  virtual_text = {
+    prefix = "●",             -- Icon trước message
+    spacing = 4,              -- Khoảng cách từ code
+    format = function(diagnostic)
+      -- Chỉ hiện message ngắn gọn
+      local message = diagnostic.message:match("^[^\n]+") or diagnostic.message
+      if #message > 60 then
+        message = message:sub(1, 57) .. "..."
+      end
+      return message
+    end,
+  },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.HINT] = "󰌵 ",
+      [vim.diagnostic.severity.INFO] = " ",
+    },
+  },
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,       -- Lỗi nghiêm trọng hiện trước
+  float = {
+    border = "rounded",
+    source = true,
+  },
+})

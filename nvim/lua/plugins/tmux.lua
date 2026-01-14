@@ -1,7 +1,7 @@
 -- ~/.config/nvim/lua/plugins/tmux.lua
 return {
   "christoomey/vim-tmux-navigator",
-  lazy = false, -- Tải ngay khi khởi động để hoạt động tốt
+  event = "VeryLazy", -- Lazy load thay vì load ngay
   config = function()
     -- Cấu hình mặc định thường là đủ, nhưng bạn có thể thêm keymaps tùy chỉnh ở đây nếu muốn
     -- Ví dụ: nếu bạn muốn dùng tổ hợp phím khác

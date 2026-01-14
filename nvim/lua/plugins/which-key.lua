@@ -120,24 +120,6 @@ return {
       { "]d", vim.diagnostic.goto_next, desc = "⬇️ Next Diagnostic", mode = "n" },
     })
 
-    -- =========================
-    -- 🐛 DEBUG (DAP)
-    -- =========================
-    wk.add({
-      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "🔴 Toggle Breakpoint", mode = "n" },
-      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Condition: ")) end, desc = "🟡 Conditional Breakpoint", mode = "n" },
-      { "<leader>dc", function() require("dap").continue() end, desc = "▶️ Continue", mode = "n" },
-      { "<leader>do", function() require("dap").step_over() end, desc = "⏭️ Step Over", mode = "n" },
-      { "<leader>di", function() require("dap").step_into() end, desc = "⏬ Step Into", mode = "n" },
-      { "<leader>dO", function() require("dap").step_out() end, desc = "⏫ Step Out", mode = "n" },
-      { "<leader>dr", function() require("dap").repl.open() end, desc = "🖥️ Open REPL", mode = "n" },
-      { "<leader>du", function() require("dapui").toggle() end, desc = "🪟 Toggle DAP UI", mode = "n" },
-      -- F-keys cho debug
-      { "<F5>", function() require("dap").continue() end, desc = "Debug: Continue", mode = "n" },
-      { "<F10>", function() require("dap").step_over() end, desc = "Debug: Step Over", mode = "n" },
-      { "<F11>", function() require("dap").step_into() end, desc = "Debug: Step Into", mode = "n" },
-      { "<F12>", function() require("dap").step_out() end, desc = "Debug: Step Out", mode = "n" },
-    })
 
     -- =========================
     -- 🔍 FZF KEYMAPS
@@ -192,6 +174,22 @@ return {
         { "<leader>pf", fzf.git_files, desc = "📂 Git Files", mode = "n" },
       })
     end
+
+    -- =========================
+    -- 🌿 GIT (Gitsigns)
+    -- =========================
+    wk.add({
+      { "<leader>gs", desc = "📥 Stage hunk", mode = "n" },
+      { "<leader>gr", desc = "↩️ Reset hunk", mode = "n" },
+      { "<leader>gS", desc = "📥 Stage buffer", mode = "n" },
+      { "<leader>gu", desc = "⏪ Undo stage hunk", mode = "n" },
+      { "<leader>gR", desc = "↩️ Reset buffer", mode = "n" },
+      { "<leader>gp", desc = "👀 Preview hunk", mode = "n" },
+      { "<leader>gb", desc = "👤 Blame line", mode = "n" },
+      { "<leader>gB", desc = "👤 Toggle line blame", mode = "n" },
+      { "<leader>gd", desc = "📊 Diff this", mode = "n" },
+      { "<leader>gD", desc = "📊 Diff this ~", mode = "n" },
+    })
 
     -- =========================
     -- 🪟 WINDOW NAVIGATION

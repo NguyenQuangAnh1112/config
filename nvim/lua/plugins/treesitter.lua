@@ -4,8 +4,7 @@ return {
   event = { "BufReadPost", "BufNewFile" },
   opts = {
     ensure_installed = {
-      "python", "lua", "vim", "bash", "markdown", "markdown_inline",
-      "json", "yaml", "html", "css", "javascript", "tsx", "cpp", "c"
+      "python", "lua", "vim", "bash", "markdown", "cpp", "c"
     },
     highlight = {
       enable = true,
@@ -14,15 +13,17 @@ return {
     indent = {
       enable = true,
     },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<C-space>",
-        node_incremental = "<C-space>",
-        scope_incremental = false,
-        node_decremental = "<bs>",
-      },
-    },
+    -- Tạm tắt incremental_selection vì gây lỗi với một số file
+    -- Bật lại nếu cần: uncomment block bên dưới
+    -- incremental_selection = {
+    --   enable = true,
+    --   keymaps = {
+    --     init_selection = "<C-space>",
+    --     node_incremental = "<C-space>",
+    --     scope_incremental = false,
+    --     node_decremental = "<bs>",
+    --   },
+    -- },
   },
   config = function(_, opts)
     require("nvim-treesitter.configs").setup(opts)

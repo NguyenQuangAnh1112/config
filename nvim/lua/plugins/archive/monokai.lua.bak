@@ -1,0 +1,19 @@
+-- Monokai Pro theme configuration
+return {
+  {
+    "loctvl842/monokai-pro.nvim",
+    priority = 1000,
+    config = function()
+      require("monokai-pro").setup({
+        transparent_background = true,
+        filter = "pro", -- "pro" | "octagon" | "machine" | "ristretto" | "spectrum" | "classic"
+        styles = {
+          comment = { italic = true },
+          keyword = { italic = true },
+          type = { italic = true },
+        },
+      })
+      vim.cmd.colorscheme("monokai-pro")
+    end,
+  },
+}

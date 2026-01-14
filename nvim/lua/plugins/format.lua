@@ -8,26 +8,25 @@ return {
     config = function()
       require("conform").setup({
         formatters_by_ft = {
-          python = { "isort", "black" }, -- isort trước, black sau
+          python = { "ruff_organize_imports", "ruff_format" }, -- organize imports + format
           cpp = { "clang-format" },
         },
         format_on_save = {
           timeout_ms = 500,
-          lsp_fallback = false, -- tránh format trùng style
+          lsp_fallback = false,
         },
       })
     end,
   },
 
   -- =========================
-  -- 🚨 LINTER
+  -- 🚨 LINTER (C++ only - Python dùng ruff_lsp)
   -- =========================
   {
     "mfussenegger/nvim-lint",
     event = { "BufWritePost" },
     config = function()
       require("lint").linters_by_ft = {
-        python = { "flake8" }, -- hoặc đổi sang "ruff"
         cpp = { "cpplint" },
       }
 

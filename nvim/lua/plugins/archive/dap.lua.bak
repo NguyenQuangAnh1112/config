@@ -1,0 +1,134 @@
+-- Debug Adapter Protocol (DAP) configuration
+return {
+  {
+    "mfussenegger/nvim-dap",
+    keys = {
+      { "<F5>", function() require("dap").continue() end, desc = "Debug: Continue" },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+      { "<leader>du", function() require("dapui").toggle() end, desc = "Toggle DAP UI" },
+    },
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "nvim-neotest/nvim-nio",
+      "theHamsta/nvim-dap-virtual-text",
+    },
+    config = function()
+      local dap = require("dap")
+
+      -- =========================
+      -- 🐍 PYTHON
+      -- =========================
+      dap.adapters.python = {
+        type = "executable",
+        command = "python",
+        args = { "-m", "debugpy.adapter" },
+      }
+
+      dap.configurations.python = {
+        {
+          type = "python",
+          request = "launch",
+          name = "Launch file",
+          program = "${file}",
+          pythonPath = function()
+            local venv = os.getenv("VIRTUAL_ENV")
+            if venv then
+              return venv .. "/bin/python"
+            end
+            return "python"
+          end,
+        },
+      }
+
+      -- =========================
+      -- 🔧 C/C++
+      -- =========================
+      dap.adapters.codelldb = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = vim.fn.stdpath("data") .. "/mason/bin/codelldb",
+          args = { "--port", "${port}" },
+        },
+      }
+
+      dap.configurations.cpp = {
+        {
+          name = "Launch file",
+          type = "codelldb",
+          request = "launch",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+          stopOnEntry = false,
+        },
+      }
+      dap.configurations.c = dap.configurations.cpp
+
+      -- =========================
+      -- 🎨 UI SIGNS
+      -- =========================
+      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◐", texthl = "DiagnosticWarn", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DiagnosticInfo", linehl = "Visual", numhl = "" })
+    end,
+  },
+
+  -- =========================
+  -- 🖥️ DAP UI
+  -- =========================
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    config = function()
+      local dapui = require("dapui")
+      dapui.setup({
+        layouts = {
+          {
+            elements = {
+              { id = "scopes", size = 0.33 },
+              { id = "breakpoints", size = 0.17 },
+              { id = "stacks", size = 0.25 },
+              { id = "watches", size = 0.25 },
+            },
+            size = 40,
+            position = "left",
+          },
+          {
+            elements = {
+              { id = "repl", size = 0.5 },
+              { id = "console", size = 0.5 },
+            },
+            size = 10,
+            position = "bottom",
+          },
+        },
+      })
+
+      -- Tự động mở/đóng UI khi debug
+      local dap = require("dap")
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
+  },
+
+  -- =========================
+  -- 💬 VIRTUAL TEXT
+  -- =========================
+  {
+    "theHamsta/nvim-dap-virtual-text",
+    config = function()
+      require("nvim-dap-virtual-text").setup({
+        commented = true,
+      })
+    end,
+  },
+}
