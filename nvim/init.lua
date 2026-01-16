@@ -20,10 +20,9 @@ vim.opt.path:append("**")
 -- Cho phép tìm file không có phần mở rộng rõ ràng
 vim.opt.suffixesadd:append(".norg")
 
--- Thiết lập Lazy.nvim, yêu cầu nó quản lý luarocks bằng hererocks
+-- Thiết lập Lazy.nvim
 require("lazy").setup("plugins", {
   rocks = {
-    enabled = true,
-    hererocks = true,
+    enabled = false,  -- Tắt luarocks (không có plugin nào cần)
   },
 })

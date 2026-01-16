@@ -1,6 +1,12 @@
 local opt = vim.opt
 local g = vim.g
 
+-- Tắt các provider không dùng (tránh warning trong checkhealth)
+g.loaded_perl_provider = 0
+g.loaded_ruby_provider = 0
+g.loaded_node_provider = 0
+g.loaded_python_provider = 0 -- Chỉ dùng python3 provider
+
 -- ==== UI ====
 opt.number = true             -- Hiển thị số dòng
 opt.relativenumber = false    -- Không dùng số dòng tương đối
@@ -67,4 +73,20 @@ vim.diagnostic.config({
     border = "rounded",
     source = true,
   },
+})
+
+-- =========================
+-- 🎨 COMPLETION MENU HIGHLIGHT
+-- =========================
+vim.api.nvim_set_hl(0, "Pmenu", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#45475a", bold = true })
+vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#ffffff", bg = "NONE" })  -- Viền trắng
+
+-- =========================
+-- 🔵 INLAY HINTS HIGHLIGHT
+-- =========================
+vim.api.nvim_set_hl(0, "LspInlayHint", {
+  fg = "#7a7a7a",  -- Màu xám nhạt
+  bg = "NONE",
+  italic = true,
 })

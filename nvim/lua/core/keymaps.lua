@@ -97,8 +97,8 @@ end, { desc = "Toggle Tmux Tab Mode" })
 -- =========================
 -- 🔍 Diagnostics
 -- =========================
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
+map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Previous Diagnostic" })
+map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next Diagnostic" })
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show Diagnostic" })
 map("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostic List" })
 

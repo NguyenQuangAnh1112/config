@@ -1,32 +1,84 @@
 return {
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  event = { "BufReadPost", "BufNewFile" },
-  opts = {
-    ensure_installed = {
-      "python", "lua", "vim", "bash", "markdown", "cpp", "c"
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-textobjects",
     },
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = false,
+    opts = {
+      ensure_installed = {
+        "python",
+        "lua",
+        "vim",
+        "vimdoc",
+        "bash",
+        "markdown",
+        "markdown_inline",
+        "cpp",
+        "c",
+        "javascript",
+        "typescript",
+        "json",
+        "yaml",
+        "toml",
+        "sql",
+      },
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+      },
+      indent = {
+        enable = true,
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
+        },
+      },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
+            ["ai"] = "@conditional.outer",
+            ["ii"] = "@conditional.inner",
+            ["al"] = "@loop.outer",
+            ["il"] = "@loop.inner",
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            ["]m"] = "@function.outer",
+            ["]]"] = "@class.outer",
+          },
+          goto_next_end = {
+            ["]M"] = "@function.outer",
+            ["]["] = "@class.outer",
+          },
+          goto_previous_start = {
+            ["[m"] = "@function.outer",
+            ["[["] = "@class.outer",
+          },
+          goto_previous_end = {
+            ["[M"] = "@function.outer",
+            ["[]"] = "@class.outer",
+          },
+        },
+      },
     },
-    indent = {
-      enable = true,
-    },
-    -- Tạm tắt incremental_selection vì gây lỗi với một số file
-    -- Bật lại nếu cần: uncomment block bên dưới
-    -- incremental_selection = {
-    --   enable = true,
-    --   keymaps = {
-    --     init_selection = "<C-space>",
-    --     node_incremental = "<C-space>",
-    --     scope_incremental = false,
-    --     node_decremental = "<bs>",
-    --   },
-    -- },
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end,
   },
-  config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
-  end,
 }
-

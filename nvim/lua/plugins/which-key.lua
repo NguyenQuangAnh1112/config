@@ -116,8 +116,8 @@ return {
     wk.add({
       { "<leader>de", vim.diagnostic.open_float, desc = "🔎 Show Diagnostic", mode = "n" },
       { "<leader>dl", vim.diagnostic.setloclist, desc = "📋 Diagnostic List", mode = "n" },
-      { "[d", vim.diagnostic.goto_prev, desc = "⬆️ Previous Diagnostic", mode = "n" },
-      { "]d", vim.diagnostic.goto_next, desc = "⬇️ Next Diagnostic", mode = "n" },
+      { "[d", function() vim.diagnostic.jump({ count = -1 }) end, desc = "⬆️ Previous Diagnostic", mode = "n" },
+      { "]d", function() vim.diagnostic.jump({ count = 1 }) end, desc = "⬇️ Next Diagnostic", mode = "n" },
     })
 
 
